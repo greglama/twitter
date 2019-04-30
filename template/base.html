@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <title>Twitter</title>
+    </head>
+
+    <body>
+        <div class="topFixed">
+            <div class="header">
+                <h2>{% block userName %}{% endblock %}</h2>
+                <h4>@{% block userPseudo %}{% endblock %}</h4>
+            </div>
+    
+            <div class = "row box">
+                <a class = "menu" href = "/profile">Home</a>
+                <div class = "col-1"></div>
+                <form class = "row formMenu" method="post" action="/searchEngine">
+                    <input class = "menuInput" type="text" name="word" placeholder="Search twitter" value="">
+                    <input class = "menuValidation" type="submit" value="Go" name="button"/>
+                </form>
+                <div class = "col-1"></div>
+                <a class = "menu" href = "/editProfile">Edit Profile</a>
+                <a class = "menu" href = "{% block logout %}{% endblock %}">Logout</a>
+                
+            </div>
+        </div>
+        
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+
+        {% block content %}
+        <h1>Futur Content</h1>
+        {% endblock %}
+        </br>
+        </br>
+        <div class="footer">
+            <p>Gregoire Albizzati 2983291 Msc computing</p>
+        </div>
+
+    </body>
+</html>

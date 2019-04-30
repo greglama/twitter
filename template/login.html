@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <title>Twitter</title>
+    </head>
+
+    <body>
+        <header class = "header">
+            <h1>Looks like it's your first time here ...</h1>
+            <h2>Welcome !</h2>
+        </header>
+        
+        </br>
+        
+        <div class = "row">
+            <div class = "col-3"></div>
+
+            <form class = "box col-6" method="post" action="/firstLogin">
+                <div class = "row">
+                    <label class = "col-2">Name</label>
+                    <input class = "loginInput" type="text" name="name" placeholder="name" value="">
+                </div>
+
+                <div class = "row">
+                    <label class = "col-2">Pseudo</label>
+                    <input class = "loginInput" type="text" name="pseudo" placeholder="pseudo" value="">
+                </div>
+
+                <div class = "row">
+                    <a class = "menu" href = "{{logout}}">Back</a>
+                    <div class = "col-8"></div>
+                    <input class = "col-2 menuValidation" type="submit" value="validate" name="button"/>
+                </div>
+            </form>
+
+            <div class = "col-3"></div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+{% extends "/template/base.html" %}
+
+{% block userName %}{{userName}}{% endblock %}
+{% block userPseudo %}{{userPseudo}}{% endblock %}
+
+{% block logout %}{{logout_url}}{% endblock %}
+
+{% block content %}
+    <div class = "row">
+        <div class = "col-3"></div>
+        <form class = "box col-6" method="post" action="/postTweet">
+            <h1>Write something ...</h1>
+            <div class = "row">
+                <textarea class = "tweet" 
+                        type = "text"
+                        rows = "7"
+                        cols = "50"
+                        name = "tweet"
+                        maxlength = "280"
+                        placeholder = "tweet something ..."
+                        value=""></textarea>
+            </div>
+
+            <div class = "row">
+                <div class = "col-10"></div>
+                <input class = "col-2 menuValidation" type="submit" value="Validate" name="button"/>
+            </div>
+        </form>
+        <div class = "col-3"></div>
+    </div>
+
+    </br>
+
+    {% for tweet in list_tweet%}
+        <div class="row">
+            <div class = "col-3"></div>
+            <div class = "box col-6">
+                <h4>{{userName}} @{{userPseudo}} has tweeted ({{tweet.dateTime.date()}})</h4>
+                <p class = "tweet">{{tweet.text}}</p>
+            </div>     
+            <div class = "col-3"></div>           
+        </div>
+        </br>
+    {% endfor %}
+{% endblock %}
