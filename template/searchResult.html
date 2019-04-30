@@ -1,0 +1,36 @@
+{% extends "/template/base.html" %}
+
+{% block userName %}{{userName}}{% endblock %}
+{% block userPseudo %}{{userPseudo}}{% endblock %}
+
+{% block logout %}{{logout_url}}{% endblock %}
+
+{% block content %}
+    <div class = "row">
+        <div class = "box col-5">
+            <h3>People you may be searching for</h3>
+            <ul>
+                {% for user in resultUsers %}
+                    <li>{{user.name}} @{{user.pseudo}}</li>
+                {%endfor%}
+            </ul>
+        </div>
+
+        <div class = "col-2"></div>
+
+        <div class = "box col-5">
+            <h3>Tweets you may be searching for</h3>
+            {% for tweet in resultTweets%}
+                <div class="row">
+                    <div class = "col-1"></div>
+                    <div class = "box col-10">
+                        <h4>@{{tweet.author}} has tweeted ({{tweet.dateTime.date()}})</h4>
+                        <p class = "tweet">{{tweet.text}}</p>
+                    </div>    
+                    <div class = "col-1"></div> 
+                </div>
+                </br>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
