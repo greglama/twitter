@@ -1,0 +1,26 @@
+{% extends "/template/base.html" %}
+
+{% block userName %}{{userName}}{% endblock %}
+{% block userPseudo %}{{userPseudo}}{% endblock %}
+
+{% block logout %}{{logout_url}}{% endblock %}
+
+{% block content %}
+<div class = "row">
+    <div class = "col-3"></div>
+    <form class = "box col-6" method="post" action="/editProfile">
+        <h1>Change your name</h1>
+        <div class = "row">
+            <label class = "col-2">Name</label>
+            <input class = "loginInput" type="text" name="name" placeholder="name" value="{{userName}}">
+        </div>
+
+        <div class = "row">
+            <div class = "col-10"></div>
+            <input class = "col-2 menuValidation" type="submit" value="validate" name="button"/>
+        </div>
+    </form>
+
+    <div class = "col-3"></div>
+</div>
+{% endblock %}
