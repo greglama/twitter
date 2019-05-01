@@ -5,12 +5,6 @@ from google.appengine.ext import ndb
 import os
 import logging
 
-from firstLogin import FirstLogin
-from profile import Profile
-from editProfile import EditProfile
-from postTweet import PostTweet
-from searchEngine import SearchEngine
-
 from user_CRUD import User_CRUD
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -19,7 +13,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True
 )
 
-class Main(webapp2.RequestHandler):
+class Login(webapp2.RequestHandler):
     userCrud = User_CRUD()
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
@@ -39,12 +33,3 @@ class Main(webapp2.RequestHandler):
         # else he isn't connected go to the login page
         else:
             self.redirect(users.create_login_url(self.request.uri))
-
-app = webapp2.WSGIApplication([
-    ('/', Main),
-    ('/firstLogin',FirstLogin),
-    ('/profile', Profile),
-    ('/editProfile', EditProfile),
-    ('/postTweet', PostTweet),
-    ('/searchEngine', SearchEngine)
-], debug=True)

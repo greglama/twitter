@@ -50,6 +50,5 @@ class SearchEngine(webapp2.RequestHandler):
                     "resultTweets": resultTweets
                 }
 
-                logging.info("I AM HERE")
                 template = JINJA_ENVIRONMENT.get_template('/template/searchResult.html')
                 self.response.write(template.render(template_values))
