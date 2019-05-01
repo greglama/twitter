@@ -1,7 +1,7 @@
 import logging
 from google.appengine.ext import ndb
-from user_twitter import User_twitter
-from tweet import Tweet
+from models.user_twitter import User_twitter
+from models.tweet import Tweet
 
 class User_CRUD:
     def __init__(self):
@@ -22,23 +22,6 @@ class User_CRUD:
         key_user = ndb.Key("User_twitter", userId)
         user_twitter = key_user.get()
         return user_twitter
-
-    def getAllTweetsOfUser(self, userId):
-        """return all the tweets of a user"""
-        user = self.getUser(userId)
-        tweets = Tweet.query(Tweet.authorId == userId).order(-Tweet.dateTime).fetch()
-        return tweets
-    
-    def get50lastTweetsOfUserIn(self, listId):
-        """return the last 50 tweets of a list of users"""
-
-        # tweets that have an authorId in the given list of id order by date 
-        tweets = Tweet.query(Tweet.authorId.IN(listId)).order(-Tweet.dateTime).fetch()
-
-        if len(tweets) > 50:
-            tweets = tweets[:50]
-
-        return tweets
     
     def createUser(self, userId, name, pseudo):
         """create a new user and return it"""
@@ -118,6 +101,23 @@ class User_CRUD:
         """return True if the user with id userId is followed by the user with id followerId"""
         user = self.getUser(userId)
         return (followerId in user.followers)
+
+    def getAllTweetsOfUser(self, userId):
+        """return all the tweets of a user"""
+        user = self.getUser(userId)
+        tweets = Tweet.query(Tweet.authorId == userId).order(-Tweet.dateTime).fetch()
+        return tweets
+    
+    def get50lastTweetsOfUserIn(self, listId):
+        """return the last 50 tweets of a list of users"""
+
+        # tweets that have an authorId in the given list of id order by date 
+        tweets = Tweet.query(Tweet.authorId.IN(listId)).order(-Tweet.dateTime).fetch()
+
+        if len(tweets) > 50:
+            tweets = tweets[:50]
+
+        return tweets
     
     def getTimeLineForUser(self, userId):
         user = self.getUser(userId)

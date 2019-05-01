@@ -5,7 +5,7 @@ from google.appengine.ext import ndb
 import os
 import logging
 
-from user_CRUD import User_CRUD
+from crud.user_CRUD import User_CRUD
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),

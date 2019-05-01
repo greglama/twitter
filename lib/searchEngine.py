@@ -5,8 +5,8 @@ from google.appengine.ext import ndb
 import os
 import logging
 
-from user_CRUD import User_CRUD
-from tweet import Tweet
+from crud.user_CRUD import User_CRUD
+from crud.models.tweet import Tweet
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
