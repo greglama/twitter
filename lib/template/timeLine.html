@@ -6,21 +6,13 @@
 {% block logout %}{{logout_url}}{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class = "col-3"></div>
-        <form class = "col-6" method="post" action="/otherProfile">
-            <input class = "{{follow_unfollow}}" type="submit" value="{{follow_unfollow}}" name="followUnfollow"/>
-            <input type="hidden" value="{{profileId}}" name="profileId"/>
-        </form>
-        <div class = "col-3"></div>
-    </div>
     {% for tweet in list_tweet%}
         <div class="row">
             <div class = "col-3"></div>
             <div class = "box col-6">
-                <h4>{{userName}} @{{userPseudo}} has tweeted ({{tweet.dateTime.date()}})</h4>
+                <h4>@{{tweet.author}} has tweeted ({{tweet.dateTime.date()}})</h4>
                 <p class = "tweet">{{tweet.text}}</p>
-            </div>     
+            </div>
             <div class = "col-3"></div>           
         </div>
         </br>

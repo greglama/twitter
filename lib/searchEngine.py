@@ -37,6 +37,8 @@ class SearchEngine(webapp2.RequestHandler):
             else:
                 searchText = self.request.get('word')
 
+                # query the tweets that match the search
+                # TODO refactorize in a class to perform the search
                 tokenizedText = self.userCrud.formatTextForSearch(searchText)
                 resultTweets = Tweet.query(Tweet.wordSearch.IN(tokenizedText)).order(-Tweet.dateTime).fetch()
 

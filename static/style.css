@@ -17,6 +17,50 @@ html
     width: 100%;
 }
 
+a
+{
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    padding: 8px;
+}
+
+.Follow
+{
+    background-color: #3363e5;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    padding: 8px;
+    float: left;
+    border-radius: 3px;
+    width: 100%;
+}
+
+.Follow:hover
+{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background-color: #274cb3;
+}
+
+.Unfollow
+{
+    background-color: #e5b633;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    padding: 8px;
+    float: left;
+    border-radius: 3px;
+    width: 100%;
+}
+
+.Unfollow:hover
+{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background-color: #b35a27;
+}
+
 .box 
 {
     background-color: #3363e5;

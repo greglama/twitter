@@ -15,12 +15,12 @@
     
             <div class = "row box">
                 <a class = "menu" href = "/profile">Home</a>
-                <div class = "col-1"></div>
+                <a class = "menu" href = "/timeLine">Timeline</a>
                 <form class = "row formMenu" method="post" action="/searchEngine">
                     <input class = "menuInput" type="text" name="word" placeholder="Search twitter" value="">
                     <input class = "menuValidation" type="submit" value="Go" name="button"/>
                 </form>
-                <div class = "col-1"></div>
+                
                 <a class = "menu" href = "/editProfile">Edit Profile</a>
                 <a class = "menu" href = "{% block logout %}{% endblock %}">Logout</a>
                 

@@ -29,6 +29,17 @@ class User_CRUD:
         tweets = Tweet.query(Tweet.authorId == userId).order(-Tweet.dateTime).fetch()
         return tweets
     
+    def get50lastTweetsOfUserIn(self, listId):
+        """return the last 50 tweets of a list of users"""
+
+        # tweets that have an authorId in the given list of id order by date 
+        tweets = Tweet.query(Tweet.authorId.IN(listId)).order(-Tweet.dateTime).fetch()
+
+        if len(tweets) > 50:
+            tweets = tweets[:50]
+
+        return tweets
+    
     def createUser(self, userId, name, pseudo):
         """create a new user and return it"""
         if not self.existsUser(userId):
@@ -77,3 +88,49 @@ class User_CRUD:
             tweet.text = text
             tweet.wordSearch = self.formatTextForSearch(text)
             tweet.put()
+
+    def userStartFollowing(self, userId, idToFollow):
+        """The user with id userId starts following the user with id idToFollow"""
+        user = self.getUser(userId)
+        userToFollow = self.getUser(idToFollow)
+
+        user.suscriptions.append(idToFollow)
+        userToFollow.followers.append(userId)
+        user.put()
+        userToFollow.put()
+    
+    def userStopToFollow(self, userId, idToUnfollow):
+        """The user with id userId stops following the user with id idToUnfollow"""
+        user = self.getUser(userId)
+        userToUnfollow = self.getUser(idToUnfollow)
+
+        user.suscriptions.remove(idToUnfollow)
+        userToUnfollow.followers.remove(userId)
+        user.put()
+        userToUnfollow.put()
+
+    def doesUserFollow(self, userId, followedId):
+        """return True if the user with id userId follows the user with id followedId"""
+        user = self.getUser(userId)
+        return (followedId in user.suscriptions)
+
+    def isUserFollowed(self, userId, followerId):
+        """return True if the user with id userId is followed by the user with id followerId"""
+        user = self.getUser(userId)
+        return (followerId in user.followers)
+    
+    def getTimeLineForUser(self, userId):
+        user = self.getUser(userId)
+
+        result = []
+
+        suscriptions_ids = list(user.suscriptions)
+
+        #run the query only if the user follow at least one person
+        if len(suscriptions_ids) > 0:
+            result = self.get50lastTweetsOfUserIn(suscriptions_ids)
+
+        return result
+        
+
+
