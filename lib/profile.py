@@ -17,28 +17,21 @@ class Profile(TwitterBaseHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
 
-        user = users.get_current_user()
-        logout_url = users.create_logout_url(self.request.uri)
-        user_twitter = None
+        logout_url = self.getLogoutUrl()
+        
+        user_twitter = self.getCurrentUserOrRedirect()
+        user_twitter_id = user_twitter.key.id()
+        
+        # get the tweets of the user
+        tweets = self.userCrud.getAllTweetsOfUser(user_twitter_id)
 
-        if user != None:
-            # get the user twitter
-            user_twitter = self.userCrud.getUser(user.user_id())
+        template_values = {
+            "userName": user_twitter.name,
+            "userPseudo": user_twitter.pseudo,
+            "logout_url": logout_url,
+            "list_tweet" : tweets
+        }
 
-        # redirect toward login if no user
-        if user_twitter == None:
-            self.redirect("/")
-
-        # fulfill the template otherwise and display the html
-        else:
-            tweets = self.userCrud.getAllTweetsOfUser(user.user_id())
-
-            template_values = {
-                "userName": user_twitter.name,
-                "userPseudo": user_twitter.pseudo,
-                "logout_url": logout_url,
-                "list_tweet" : tweets
-            }
-            template = JINJA_ENVIRONMENT.get_template('/template/userProfile.html')
-            self.response.write(template.render(template_values))
+        template = JINJA_ENVIRONMENT.get_template('/template/userProfile.html')
+        self.response.write(template.render(template_values))
 

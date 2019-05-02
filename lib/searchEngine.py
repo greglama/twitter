@@ -19,36 +19,26 @@ class SearchEngine(TwitterBaseHandler):
         self.response.headers['Content-Type'] = 'text/html'
 
         if self.request.get('button') == 'Go':
-            user = users.get_current_user()
-            logout_url = users.create_logout_url(self.request.uri)
-            user_twitter = None
 
-            if user != None:
-                # get the user twitter
-                user_twitter = self.userCrud.getUser(user.user_id())
+            logout_url = self.getLogoutUrl()
+            user_twitter = self.getCurrentUserOrRedirect()
 
-            # redirect toward login if no user
-            if user_twitter == None:
-                self.redirect("/")
+            searchText = self.request.get('word')
 
-            # fulfill the template otherwise and display the html
-            else:
-                searchText = self.request.get('word')
+            # query the tweets that match the search
+            # TODO refactorize in a class to perform the search
+            tokenizedText = self.userCrud.formatTextForSearch(searchText)
+            resultTweets = Tweet.query(Tweet.wordSearch.IN(tokenizedText)).order(-Tweet.dateTime).fetch()
 
-                # query the tweets that match the search
-                # TODO refactorize in a class to perform the search
-                tokenizedText = self.userCrud.formatTextForSearch(searchText)
-                resultTweets = Tweet.query(Tweet.wordSearch.IN(tokenizedText)).order(-Tweet.dateTime).fetch()
+            resultUsers = self.userCrud.searchUserByString(searchText)
 
-                resultUsers = self.userCrud.searchUserByString(searchText)
+            template_values = {
+                "userName": user_twitter.name,
+                "userPseudo": user_twitter.pseudo,
+                "logout_url": logout_url,
+                "resultUsers" : resultUsers,
+                "resultTweets": resultTweets
+            }
 
-                template_values = {
-                    "userName": user_twitter.name,
-                    "userPseudo": user_twitter.pseudo,
-                    "logout_url": logout_url,
-                    "resultUsers" : resultUsers,
-                    "resultTweets": resultTweets
-                }
-
-                template = JINJA_ENVIRONMENT.get_template('/template/searchResult.html')
-                self.response.write(template.render(template_values))
+            template = JINJA_ENVIRONMENT.get_template('/template/searchResult.html')
+            self.response.write(template.render(template_values))

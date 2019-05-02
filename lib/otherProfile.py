@@ -21,70 +21,52 @@ class OtherProfile(TwitterBaseHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
 
-        user = users.get_current_user()
-        logout_url = users.create_logout_url(self.request.uri)
-        user_twitter = None
+        logout_url = self.getLogoutUrl()
+        
+        user_twitter = self.getCurrentUserOrRedirect()
 
-        if user != None:
-            # get the user twitter
-            user_twitter = self.userCrud.getUser(user.user_id())
+        profileId = self.request.get('profileId') # id of profile to see
+        user_twitter_id = user_twitter.key.id() # id of current user
 
-        # redirect toward login if no user
-        if user_twitter == None:
-            self.redirect("/")
+        # get the profile and its tweets
+        profile = self.userCrud.getUser(profileId)
+        tweets = self.userCrud.getAllTweetsOfUser(profileId)
 
-        # fulfill the template and display the html
-        else:
-            profileId = self.request.get('profileId') # id of profile to see
-            user_twitter_id = user_twitter.key.id() # id of current user
+        follow_unfollow = self.FOLLOW
 
-            # get the profile and its tweets
-            profile = self.userCrud.getUser(profileId)
-            tweets = self.userCrud.getAllTweetsOfUser(profileId)
+        # if the profile is already followed
+        if self.userCrud.isUserFollowed(profileId, user_twitter_id):
+            follow_unfollow = self.UNFOLLOW
 
-            follow_unfollow = self.FOLLOW
+        
+        template_values = {
+            "userName": profile.name,
+            "userPseudo": profile.pseudo,
+            "logout_url": logout_url,
+            "list_tweet" : tweets,
+            "profileId" : profileId,
+            "follow_unfollow": follow_unfollow
+        }
 
-            # if the profile is already followed
-            if self.userCrud.isUserFollowed(profileId, user_twitter_id):
-                follow_unfollow = self.UNFOLLOW
-
-            
-            template_values = {
-                "userName": profile.name,
-                "userPseudo": profile.pseudo,
-                "logout_url": logout_url,
-                "list_tweet" : tweets,
-                "profileId" : profileId,
-                "follow_unfollow": follow_unfollow
-            }
-
-            template = JINJA_ENVIRONMENT.get_template('/template/otherProfile.html')
-            self.response.write(template.render(template_values))
+        template = JINJA_ENVIRONMENT.get_template('/template/otherProfile.html')
+        self.response.write(template.render(template_values))
     
     def post(self):
         self.response.headers['Content-Type'] = 'text/html'
-        
-        # TODO refactor this whole thing... inheritence --------------------
-        user = users.get_current_user()
-        logout_url = users.create_logout_url(self.request.uri)
-        user_twitter = None
 
-        if user != None:
-            # get the user twitter
-            user_twitter = self.userCrud.getUser(user.user_id())
+        # get the user (redirect if None)        
+        user_twitter = self.getCurrentUserOrRedirect()
 
-        # redirect toward login if no user
-        if user_twitter == None:
-            self.redirect("/")
-
-        #--------------------
-
+        #get IDs of both parties 
+        user_twitter_id = user_twitter.key.id()
         profileId = self.request.get('profileId')
 
+        #if he is following then we want to unfollow
         if self.request.get('followUnfollow') == self.FOLLOW:
-            self.userCrud.userStartFollowing(user_twitter.key.id(), profileId)
+            self.userCrud.userStartFollowing(user_twitter_id, profileId)
 
+        # and vice-versa
         if self.request.get('followUnfollow') == self.UNFOLLOW:
-            self.userCrud.userStopToFollow(user_twitter.key.id(), profileId)
+            self.userCrud.userStopToFollow(user_twitter_id, profileId)
         
         self.redirect("/otherProfile?profileId=" + profileId)

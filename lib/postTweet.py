@@ -21,12 +21,10 @@ class PostTweet(TwitterBaseHandler):
         if self.request.get('button') == 'Validate':
             tweet_text = self.request.get('tweet')
 
-            logging.info(tweet_text)
-
-            user = users.get_current_user()
+            user = self.getCurrentGoogleUserOrRedirect()
 
             if user != None:
-                # get the user_twitter
+                # post the tweet
                 self.userCrud.postTweet(user.user_id(), tweet_text)
 
             self.redirect("/profile")
