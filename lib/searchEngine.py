@@ -5,7 +5,7 @@ from google.appengine.ext import ndb
 import os
 import logging
 
-from crud.user_CRUD import User_CRUD
+from twitterBaseHandler import TwitterBaseHandler
 from crud.models.tweet import Tweet
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -14,9 +14,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True
 )
 
-class SearchEngine(webapp2.RequestHandler):
-    userCrud = User_CRUD()
-
+class SearchEngine(TwitterBaseHandler):
     def post(self):
         self.response.headers['Content-Type'] = 'text/html'
 
