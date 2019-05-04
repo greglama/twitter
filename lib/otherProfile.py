@@ -41,6 +41,7 @@ class OtherProfile(TwitterBaseHandler):
         template_values = {
             "userName": profile.name,
             "userPseudo": profile.pseudo,
+            "description": profile.description,
             "profileId" : profileId,
             "logout_url": logout_url,
             "list_tweet" : tweets,

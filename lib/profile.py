@@ -27,6 +27,7 @@ class Profile(TwitterBaseHandler):
         template_values = {
             "userName": user_twitter.name,
             "userPseudo": user_twitter.pseudo,
+            "description": user_twitter.description,
             "logout_url": logout_url,
             "list_tweet" : tweets
         }

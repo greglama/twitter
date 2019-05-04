@@ -23,7 +23,7 @@ class User_CRUD:
         user_twitter = key_user.get()
         return user_twitter
     
-    def createUser(self, userId, name, pseudo):
+    def createUser(self, userId, name, pseudo, description):
         """create a new user and return it"""
         if not self.existsUser(userId):
             user = User_twitter(id = userId)
@@ -31,6 +31,7 @@ class User_CRUD:
             user.pseudo = pseudo.lower()
             user.numberOfTweet = 0
             user.tweets = []
+            user.description = description
 
             user.put()
 

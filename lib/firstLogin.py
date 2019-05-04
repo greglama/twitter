@@ -32,10 +32,11 @@ class FirstLogin(TwitterBaseHandler):
         if self.request.get('button') == 'validate':
             name = self.request.get('name').strip()
             pseudo = self.request.get('pseudo').strip()
+            description = self.request.get('description').strip()
             
             #TODO check arguments for already existing pseudo...
             # add a user in the data store and redirect him toward his profile
-            self.userCrud.createUser(user.user_id(), name, pseudo)
+            self.userCrud.createUser(user.user_id(), name, pseudo, description)
             self.redirect("/profile")
 
         else:

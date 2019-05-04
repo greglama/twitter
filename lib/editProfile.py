@@ -23,6 +23,7 @@ class EditProfile(TwitterBaseHandler):
         template_values = {
             "userName": user_twitter.name,
             "userPseudo": user_twitter.pseudo,
+            "description": user_twitter.description,
             "logout_url": logout_url
         }
 
@@ -33,10 +34,12 @@ class EditProfile(TwitterBaseHandler):
 
         if self.request.get('button') == 'validate':
             name = self.request.get('name').strip()
+            description = self.request.get('description').strip()
             
             user_twitter = self.getCurrentTwitterUser()
 
             #TODO call CRUD here instead
             user_twitter.name = name
+            user_twitter.description = description
             user_twitter.put()
             self.redirect("/profile")
