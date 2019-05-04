@@ -15,27 +15,28 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class EditProfile(TwitterBaseHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-
+        self.redirectIfNotConnected()
         logout_url = self.getLogoutUrl()
-
-        user_twitter = self.getCurrentUserOrRedirect()
+        
+        user_twitter = self.getCurrentTwitterUser()
 
         template_values = {
             "userName": user_twitter.name,
             "userPseudo": user_twitter.pseudo,
             "logout_url": logout_url
         }
-        template = JINJA_ENVIRONMENT.get_template('/template/editProfile.html')
-        self.response.write(template.render(template_values))
+
+        self.sendHTMLresponse(template_values, '/template/editProfile.html')
 
     def post(self):
+        self.redirectIfNotConnected()
+
         if self.request.get('button') == 'validate':
             name = self.request.get('name').strip()
             
-            user = self.getCurrentUserOrRedirect()
+            user_twitter = self.getCurrentTwitterUser()
 
             #TODO call CRUD here instead
-            user.name = name
-            user.put()
+            user_twitter.name = name
+            user_twitter.put()
             self.redirect("/profile")

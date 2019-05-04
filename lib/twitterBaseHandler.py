@@ -4,6 +4,8 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 import os
 
+import logging
+
 from crud.user_CRUD import User_CRUD
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -17,32 +19,48 @@ class TwitterBaseHandler(webapp2.RequestHandler):
 
     def getLogoutUrl(self):
         """return a logout url"""
-        return users.create_logout_url(self.request.uri)
+        return users.create_logout_url("/")
+
+
+    def logUserOut(self):
+        """log a user out imediatly"""
+        self.redirect(self.getLogoutUrl())
     
-    def getCurrentGoogleUserOrRedirect(self):
-        """return the current google user, or redirect toward login if it doesn't exist"""
+
+    def redirectTowardEmailLogin(self):
+        """redirect the user toward the email login page"""
+        self.redirect(users.create_login_url(self.request.uri), True, True)
+
+
+    def redirectIfNotConnected(self):
+        """redirect toward email login if the user isn't connected"""
+        if self.getCurrentGoogleUser() == None:
+            self.redirectTowardEmailLogin()
+
+
+    def getCurrentGoogleUser(self):
+        """return the google user, return None if no user"""
+        return users.get_current_user()
+    
+
+    def getCurrentTwitterUser(self):
+        """return the twitter user (which is built upon the google user),
+        return None if no user"""
+
         #get the google user
-        user = users.get_current_user()
-        
-        if user == None:
-            self.redirect("/")
-        
-        return user
-
-    def getCurrentUserOrRedirect(self):
-        """return the current user_twitter, or redirect toward login if it doesn't exist"""
-
-        #get the google user
-        user = users.get_current_user()
-
+        user = self.getCurrentGoogleUser()
         user_twitter = None
 
         if user != None:
             # get the user twitter
             user_twitter = self.userCrud.getUser(user.user_id())
 
-        # redirect toward login if no user
-        if user_twitter == None:
-            self.redirect("/")
-        
         return user_twitter
+
+
+    def sendHTMLresponse(self, template_values, templatePath):
+        """send the html template to the client with the rendered parameters"""
+        
+        self.response.headers['Content-Type'] = 'text/html'
+        template = JINJA_ENVIRONMENT.get_template(templatePath)
+        self.response.write(template.render(template_values))

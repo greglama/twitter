@@ -16,12 +16,11 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class SearchEngine(TwitterBaseHandler):
     def post(self):
-        self.response.headers['Content-Type'] = 'text/html'
-
-        if self.request.get('button') == 'Go':
-
-            logout_url = self.getLogoutUrl()
-            user_twitter = self.getCurrentUserOrRedirect()
+        self.redirectIfNotConnected()
+        logout_url = self.getLogoutUrl()
+        
+        if self.request.get('button') == 'Go':    
+            user_twitter = self.getCurrentTwitterUser()
 
             searchText = self.request.get('word')
 
@@ -40,5 +39,4 @@ class SearchEngine(TwitterBaseHandler):
                 "resultTweets": resultTweets
             }
 
-            template = JINJA_ENVIRONMENT.get_template('/template/searchResult.html')
-            self.response.write(template.render(template_values))
+            self.sendHTMLresponse(template_values, '/template/searchResult.html')

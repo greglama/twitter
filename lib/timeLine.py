@@ -15,15 +15,13 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class TimeLine(TwitterBaseHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-
+        self.redirectIfNotConnected()
         logout_url = self.getLogoutUrl()
         
-        user_twitter = self.getCurrentUserOrRedirect()
-
+        user_twitter = self.getCurrentTwitterUser()
         user_twitter_id = user_twitter.key.id() # id of current user
-
-        tweets = self.userCrud.getTimeLineForUser(user_twitter_id)
+        
+        tweets = self.userCrud.getTimeLineForUser(user_twitter_id) # tweets to put in the timeline
         
         template_values = {
             "userName": user_twitter.name,
@@ -32,5 +30,4 @@ class TimeLine(TwitterBaseHandler):
             "list_tweet" : tweets
         }
 
-        template = JINJA_ENVIRONMENT.get_template('/template/timeLine.html')
-        self.response.write(template.render(template_values))
+        self.sendHTMLresponse(template_values, '/template/timeLine.html')

@@ -19,18 +19,17 @@ class OtherProfile(TwitterBaseHandler):
     UNFOLLOW = "Unfollow"
 
     def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-
+        self.redirectIfNotConnected()
         logout_url = self.getLogoutUrl()
-        
-        user_twitter = self.getCurrentUserOrRedirect()
 
-        profileId = self.request.get('profileId') # id of profile to see
+        user_twitter = self.getCurrentTwitterUser()
         user_twitter_id = user_twitter.key.id() # id of current user
 
-        # get the profile and its tweets
+        profileId = self.request.get('profileId') # id of profile to see
         profile = self.userCrud.getUser(profileId)
-        tweets = self.userCrud.getAllTweetsOfUser(profileId)
+
+        # get the profile and its tweets
+        tweets = self.userCrud.getAllTweetsOfUser(profileId) #tweets of the profile to see
 
         follow_unfollow = self.FOLLOW
 
@@ -42,20 +41,20 @@ class OtherProfile(TwitterBaseHandler):
         template_values = {
             "userName": profile.name,
             "userPseudo": profile.pseudo,
+            "profileId" : profileId,
             "logout_url": logout_url,
             "list_tweet" : tweets,
-            "profileId" : profileId,
             "follow_unfollow": follow_unfollow
         }
 
-        template = JINJA_ENVIRONMENT.get_template('/template/otherProfile.html')
-        self.response.write(template.render(template_values))
+        self.sendHTMLresponse(template_values, '/template/otherProfile.html')
     
     def post(self):
-        self.response.headers['Content-Type'] = 'text/html'
+
+        # TODO refactor here
 
         # get the user (redirect if None)        
-        user_twitter = self.getCurrentUserOrRedirect()
+        user_twitter = self.getCurrentTwitterUser()
 
         #get IDs of both parties 
         user_twitter_id = user_twitter.key.id()

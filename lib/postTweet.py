@@ -14,14 +14,13 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 )
 
 class PostTweet(TwitterBaseHandler):
-
     def post(self):
-        self.response.headers['Content-Type'] = 'text/html'
+        self.redirectIfNotConnected()
         
         if self.request.get('button') == 'Validate':
-            tweet_text = self.request.get('tweet')
 
-            user = self.getCurrentGoogleUserOrRedirect()
+            tweet_text = self.request.get('tweet')
+            user = self.getCurrentGoogleUser()
 
             if user != None:
                 # post the tweet

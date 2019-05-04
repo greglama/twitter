@@ -15,11 +15,10 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class Profile(TwitterBaseHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-
+        self.redirectIfNotConnected()
         logout_url = self.getLogoutUrl()
-        
-        user_twitter = self.getCurrentUserOrRedirect()
+
+        user_twitter = self.getCurrentTwitterUser()
         user_twitter_id = user_twitter.key.id()
         
         # get the tweets of the user
@@ -32,6 +31,4 @@ class Profile(TwitterBaseHandler):
             "list_tweet" : tweets
         }
 
-        template = JINJA_ENVIRONMENT.get_template('/template/userProfile.html')
-        self.response.write(template.render(template_values))
-
+        self.sendHTMLresponse(template_values, '/template/userProfile.html')

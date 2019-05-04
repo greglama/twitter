@@ -16,20 +16,18 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class FirstLogin(TwitterBaseHandler):
 
     def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-
+        
+        self.redirectIfNotConnected()
         url_logout = self.getLogoutUrl()
 
-        #Will redirect toward login if the user hasn't gone through the email login process
-        self.getCurrentGoogleUserOrRedirect()
-
         template_values = {"logout":url_logout}
-        template = JINJA_ENVIRONMENT.get_template('/template/login.html')
-        self.response.write(template.render(template_values))
+        self.sendHTMLresponse(template_values, '/template/login.html')
 
     def post(self):        
+        self.redirectIfNotConnected()
+
         #get the current connected user, redirect toward email login if none
-        user = self.getCurrentGoogleUserOrRedirect()
+        user = self.getCurrentGoogleUser()
 
         if self.request.get('button') == 'validate':
             name = self.request.get('name').strip()

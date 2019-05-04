@@ -15,20 +15,11 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class Login(TwitterBaseHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
+        self.redirectIfNotConnected()
 
-        user = users.get_current_user()
+        # if it is its first connexion
+        if self.getCurrentTwitterUser() == None:
+            self.redirect("/firstLogin")
 
-        # if the user is connected
-        if user != None:
-            # if it is the first connexion
-            if not self.userCrud.existsUser(user.user_id()):
-                # if yes go to first connexion
-                self.redirect("/firstLogin")
-
-            # else go to user profile
-            else:
-                self.redirect("/profile")
-        # else he isn't connected go to the login page
         else:
-            self.redirect(users.create_login_url(self.request.uri))
+            self.redirect("/profile")
