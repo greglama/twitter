@@ -38,4 +38,4 @@ class SearchEngine(TwitterBaseHandler):
                 "resultTweets": resultTweets
             }
 
-            self.sendHTMLresponse(template_values, '/template/searchResult.html')
+            self.sendHTMLresponse(template_values, SearchEngine.TEMPLATE_TO_RENDER)

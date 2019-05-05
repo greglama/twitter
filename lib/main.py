@@ -1,5 +1,5 @@
 import webapp2
-
+import logging
 from login import Login
 from firstLogin import FirstLogin
 from profile import Profile
@@ -8,6 +8,15 @@ from postTweet import PostTweet
 from searchEngine import SearchEngine
 from otherProfile import OtherProfile
 from timeLine import TimeLine
+
+TEMPLATE_FOLDER = "/template/"
+
+FirstLogin.set_template_to_render(TEMPLATE_FOLDER + 'login.html')
+Profile.set_template_to_render(TEMPLATE_FOLDER + 'userProfile.html')
+EditProfile.set_template_to_render(TEMPLATE_FOLDER + 'editProfile.html')
+SearchEngine.set_template_to_render(TEMPLATE_FOLDER + 'searchResult.html')
+OtherProfile.set_template_to_render(TEMPLATE_FOLDER + 'otherProfile.html')
+TimeLine.set_template_to_render(TEMPLATE_FOLDER + 'timeLine.html')
 
 app = webapp2.WSGIApplication([
     ('/', Login),
@@ -19,3 +28,4 @@ app = webapp2.WSGIApplication([
     ('/otherProfile', OtherProfile),
     ('/timeLine', TimeLine)
 ], debug=True)
+

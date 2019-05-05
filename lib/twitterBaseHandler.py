@@ -15,6 +15,12 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class TwitterBaseHandler(webapp2.RequestHandler):
 
+    TEMPLATE_TO_RENDER = ""
+
+    @classmethod
+    def set_template_to_render(cls, template_to_render):
+        cls.TEMPLATE_TO_RENDER = template_to_render
+
     def getLogoutUrl(self):
         """return a logout url"""
         return users.create_logout_url("/")

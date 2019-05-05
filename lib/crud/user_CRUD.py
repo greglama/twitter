@@ -15,9 +15,10 @@ def createUser(userId, name, pseudo, description):
         user.numberOfTweet = 0
         user.tweets = []
         user.description = description
+        user.suscriptions = [userId] # so the user's tweets end up inside his timeline
 
         user.put()
-
+ 
         return user
 
 def getUser(userId):

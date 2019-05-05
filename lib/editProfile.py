@@ -29,7 +29,7 @@ class EditProfile(TwitterBaseHandler):
             "logout_url": logout_url
         }
 
-        self.sendHTMLresponse(template_values, '/template/editProfile.html')
+        self.sendHTMLresponse(template_values, EditProfile.TEMPLATE_TO_RENDER)
 
     def post(self):
         self.redirectIfNotConnected()

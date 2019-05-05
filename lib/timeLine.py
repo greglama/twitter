@@ -32,4 +32,4 @@ class TimeLine(TwitterBaseHandler):
             "list_tweet" : tweets
         }
 
-        self.sendHTMLresponse(template_values, '/template/timeLine.html')
+        self.sendHTMLresponse(template_values, TimeLine.TEMPLATE_TO_RENDER)

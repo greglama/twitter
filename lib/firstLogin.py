@@ -22,7 +22,7 @@ class FirstLogin(TwitterBaseHandler):
         url_logout = self.getLogoutUrl()
 
         template_values = {"logout":url_logout}
-        self.sendHTMLresponse(template_values, '/template/login.html')
+        self.sendHTMLresponse(template_values, FirstLogin.TEMPLATE_TO_RENDER)
 
     def post(self):        
         self.redirectIfNotConnected()

@@ -55,7 +55,7 @@ class OtherProfile(TwitterBaseHandler):
             "follow_unfollow": follow_unfollow
         }
 
-        self.sendHTMLresponse(template_values, '/template/otherProfile.html')
+        self.sendHTMLresponse(template_values, OtherProfile.TEMPLATE_TO_RENDER)
     
     def post(self):
         self.redirectIfNotConnected()
