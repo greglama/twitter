@@ -5,8 +5,7 @@ from google.appengine.ext import ndb
 import os
 
 import logging
-
-from crud.user_CRUD import User_CRUD
+from crud.user_CRUD import getUser
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -15,7 +14,6 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 )
 
 class TwitterBaseHandler(webapp2.RequestHandler):
-    userCrud = User_CRUD()
 
     def getLogoutUrl(self):
         """return a logout url"""
@@ -53,7 +51,7 @@ class TwitterBaseHandler(webapp2.RequestHandler):
 
         if user != None:
             # get the user twitter
-            user_twitter = self.userCrud.getUser(user.user_id())
+            user_twitter = getUser(user.user_id())
 
         return user_twitter
 

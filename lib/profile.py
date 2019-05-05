@@ -7,6 +7,8 @@ import logging
 
 from twitterBaseHandler import TwitterBaseHandler
 
+from crud.tweets_CRUD import getAllTweetsOfUser
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -22,7 +24,7 @@ class Profile(TwitterBaseHandler):
         user_twitter_id = user_twitter.key.id()
         
         # get the tweets of the user
-        tweets = self.userCrud.getAllTweetsOfUser(user_twitter_id)
+        tweets = getAllTweetsOfUser(user_twitter_id)
 
         template_values = {
             "userName": user_twitter.name,

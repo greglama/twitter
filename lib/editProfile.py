@@ -7,6 +7,8 @@ import logging
 
 from twitterBaseHandler import TwitterBaseHandler
 
+from crud.user_CRUD import updateUser
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -32,14 +34,13 @@ class EditProfile(TwitterBaseHandler):
     def post(self):
         self.redirectIfNotConnected()
 
+        #update the name and description of a user
         if self.request.get('button') == 'validate':
+
             name = self.request.get('name').strip()
             description = self.request.get('description').strip()
             
-            user_twitter = self.getCurrentTwitterUser()
+            user_twitter_id = self.getCurrentTwitterUser().key.id()
 
-            #TODO call CRUD here instead
-            user_twitter.name = name
-            user_twitter.description = description
-            user_twitter.put()
+            updateUser(user_twitter_id, name, description)
             self.redirect("/profile")

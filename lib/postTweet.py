@@ -7,6 +7,8 @@ import logging
 
 from twitterBaseHandler import TwitterBaseHandler
 
+from crud.tweets_CRUD import postTweet
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -18,13 +20,10 @@ class PostTweet(TwitterBaseHandler):
         self.redirectIfNotConnected()
         
         if self.request.get('button') == 'Validate':
-
             tweet_text = self.request.get('tweet')
-            user = self.getCurrentGoogleUser()
 
-            if user != None:
-                # post the tweet
-                self.userCrud.postTweet(user.user_id(), tweet_text)
+            user = self.getCurrentGoogleUser()
+            postTweet(user.user_id(), tweet_text)
 
             self.redirect("/profile")
 

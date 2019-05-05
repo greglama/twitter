@@ -7,6 +7,8 @@ import logging
 
 from twitterBaseHandler import TwitterBaseHandler
 
+from crud.user_CRUD import createUser
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -16,7 +18,6 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class FirstLogin(TwitterBaseHandler):
 
     def get(self):
-        
         self.redirectIfNotConnected()
         url_logout = self.getLogoutUrl()
 
@@ -30,13 +31,13 @@ class FirstLogin(TwitterBaseHandler):
         user = self.getCurrentGoogleUser()
 
         if self.request.get('button') == 'validate':
+            # add a user in the data store and redirect him toward his profile
             name = self.request.get('name').strip()
             pseudo = self.request.get('pseudo').strip()
             description = self.request.get('description').strip()
             
-            #TODO check arguments for already existing pseudo...
-            # add a user in the data store and redirect him toward his profile
-            self.userCrud.createUser(user.user_id(), name, pseudo, description)
+            #TODO check if pseudo already exist...
+            createUser(user.user_id(), name, pseudo, description)
             self.redirect("/profile")
 
         else:

@@ -1,137 +1,83 @@
-import logging
 from google.appengine.ext import ndb
+
 from models.user_twitter import User_twitter
 from models.tweet import Tweet
 
-class User_CRUD:
-    def __init__(self):
-        pass
+import logging
 
-    def existsUser(self, userId):
-        """return True if there is a user with this id"""
-        key_user = ndb.Key("User_twitter", userId)
-        user = key_user.get()
+#------------ Creation, Get, Update, Exist, Search -----------------
+def createUser(userId, name, pseudo, description):
+    """create a new user and return it"""
+    if not existsUser(userId):
+        user = User_twitter(id = userId)
+        user.name = name.lower()
+        user.pseudo = pseudo.lower()
+        user.numberOfTweet = 0
+        user.tweets = []
+        user.description = description
 
-        if user != None:
-            return True
-        else:
-            return False
-
-    def getUser(self, userId):
-        """return a user with a given id"""
-        key_user = ndb.Key("User_twitter", userId)
-        user_twitter = key_user.get()
-        return user_twitter
-    
-    def createUser(self, userId, name, pseudo, description):
-        """create a new user and return it"""
-        if not self.existsUser(userId):
-            user = User_twitter(id = userId)
-            user.name = name.lower()
-            user.pseudo = pseudo.lower()
-            user.numberOfTweet = 0
-            user.tweets = []
-            user.description = description
-
-            user.put()
-
-            return user
-    
-    def searchUserByString(self, string):
-        """query all user whom pseudo or name match the string"""
-        return User_twitter.query(ndb.OR(User_twitter.name == string.lower(),
-                                    User_twitter.pseudo == string.lower())
-                                ).fetch()
-
-    def formatTextForSearch(self, text):
-        """sets to lower case removes punctuation, new lines, splits on spaces and removes empty strings"""
-        return filter(lambda s: s != "" ,
-                                    text.lower()
-                                    .replace(".","")
-                                    .replace(",","")
-                                    .replace("!", "")
-                                    .replace("?", "")
-                                    .replace("'", "")
-                                    .replace("\t", " ")
-                                    .replace("\n", " ")
-                                    .replace("\r", " ")
-                                    .split(" "))
-
-    def postTweet(self, userId, text):
-        """create a tweet for a given user"""
-        user = self.getUser(userId)
-
-        if user != None:
-            user.numberOfTweet += 1
-            user.put()
-
-            id_tweet = userId + "_" + str(user.numberOfTweet)
-            tweet = Tweet(id = id_tweet)
-            tweet.author = user.pseudo
-            tweet.authorId = userId
-            tweet.text = text
-            tweet.wordSearch = self.formatTextForSearch(text)
-            tweet.put()
-
-    def userStartFollowing(self, userId, idToFollow):
-        """The user with id userId starts following the user with id idToFollow"""
-        user = self.getUser(userId)
-        userToFollow = self.getUser(idToFollow)
-
-        user.suscriptions.append(idToFollow)
-        userToFollow.followers.append(userId)
         user.put()
-        userToFollow.put()
-    
-    def userStopToFollow(self, userId, idToUnfollow):
-        """The user with id userId stops following the user with id idToUnfollow"""
-        user = self.getUser(userId)
-        userToUnfollow = self.getUser(idToUnfollow)
 
-        user.suscriptions.remove(idToUnfollow)
-        userToUnfollow.followers.remove(userId)
-        user.put()
-        userToUnfollow.put()
+        return user
 
-    def doesUserFollow(self, userId, followedId):
-        """return True if the user with id userId follows the user with id followedId"""
-        user = self.getUser(userId)
-        return (followedId in user.suscriptions)
+def getUser(userId):
+    """return a user with a given id"""
+    key_user = ndb.Key("User_twitter", userId)
+    user_twitter = key_user.get()
+    return user_twitter
 
-    def isUserFollowed(self, userId, followerId):
-        """return True if the user with id userId is followed by the user with id followerId"""
-        user = self.getUser(userId)
-        return (followerId in user.followers)
+def updateUser(userId, name, description):
+    """update a user's name and description"""
 
-    def getAllTweetsOfUser(self, userId):
-        """return all the tweets of a user"""
-        user = self.getUser(userId)
-        tweets = Tweet.query(Tweet.authorId == userId).order(-Tweet.dateTime).fetch()
-        return tweets
-    
-    def get50lastTweetsOfUserIn(self, listId):
-        """return the last 50 tweets of a list of users"""
+    user = getUser(userId)
+    user.name = name
+    user.description = description
+    user.put()
 
-        # tweets that have an authorId in the given list of id order by date 
-        tweets = Tweet.query(Tweet.authorId.IN(listId)).order(-Tweet.dateTime).fetch()
+def existsUser(userId):
+    """return True if there is a user with this id"""
+    key_user = ndb.Key("User_twitter", userId)
+    user = key_user.get()
 
-        if len(tweets) > 50:
-            tweets = tweets[:50]
+    if user != None:
+        return True
+    else:
+        return False
 
-        return tweets
-    
-    def getTimeLineForUser(self, userId):
-        user = self.getUser(userId)
+def searchUserByString(string):
+    """query all user whom pseudo or name match the string"""
+    return User_twitter.query(ndb.OR(User_twitter.name == string.lower(),
+                                User_twitter.pseudo == string.lower())
+                            ).fetch()
 
-        result = []
+#------------ Follow, Unfollow -----------------
 
-        suscriptions_ids = list(user.suscriptions)
+def userStartFollowing(userId, idToFollow):
+    """The user with id userId starts following the user with id idToFollow"""
+    user = getUser(userId)
+    userToFollow = getUser(idToFollow)
 
-        #run the query only if the user follow at least one person
-        if len(suscriptions_ids) > 0:
-            result = self.get50lastTweetsOfUserIn(suscriptions_ids)
+    user.suscriptions.append(idToFollow)
+    userToFollow.followers.append(userId)
+    user.put()
+    userToFollow.put()
 
-        return result
-        
+def userStopToFollow(userId, idToUnfollow):
+    """The user with id userId stops following the user with id idToUnfollow"""
+    user = getUser(userId)
+    userToUnfollow = getUser(idToUnfollow)
 
+    user.suscriptions.remove(idToUnfollow)
+    userToUnfollow.followers.remove(userId)
+    user.put()
+    userToUnfollow.put()
 
+def doesUserFollow(userId, followedId):
+    """return True if the user with id userId follows the user with id followedId"""
+    user = getUser(userId)
+    return (followedId in user.suscriptions)
+
+def isUserFollowed(userId, followerId):
+    """return True if the user with id userId is followed by the user with id followerId"""
+    user = getUser(userId)
+    return (followerId in user.followers)

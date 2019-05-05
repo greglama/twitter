@@ -3,10 +3,13 @@ import jinja2
 from google.appengine.api import users
 from google.appengine.ext import ndb
 import os
-import logging
 
 from twitterBaseHandler import TwitterBaseHandler
+
 from crud.models.tweet import Tweet
+
+from crud.tweets_CRUD import plainTextSearch
+from crud.user_CRUD import searchUserByString
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -24,12 +27,8 @@ class SearchEngine(TwitterBaseHandler):
 
             searchText = self.request.get('word')
 
-            # query the tweets that match the search
-            # TODO refactorize in a class to perform the search
-            tokenizedText = self.userCrud.formatTextForSearch(searchText)
-            resultTweets = Tweet.query(Tweet.wordSearch.IN(tokenizedText)).order(-Tweet.dateTime).fetch()
-
-            resultUsers = self.userCrud.searchUserByString(searchText)
+            resultTweets = plainTextSearch(searchText)
+            resultUsers = searchUserByString(searchText)
 
             template_values = {
                 "userName": user_twitter.name,
