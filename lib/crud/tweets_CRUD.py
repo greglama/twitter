@@ -56,6 +56,12 @@ def updateTweet(idTweet, newText):
     tweet.put()
 
 
+def deleteTweet(idTweet):
+    """delete a tweet with given id"""
+    tweet = getTweetById(idTweet)
+    tweet.key.delete()
+
+
 def getAllTweetsOfUser(userId):
     """return all the tweets of a user"""
     user = getUser(userId)
@@ -64,7 +70,7 @@ def getAllTweetsOfUser(userId):
 
 
 def get50lastTweetsOfUserIn(listId):
-    """return the last 50 tweets of a list of users"""
+    """return the last 50 tweets (chronologicaly) of a list of users"""
 
     # tweets that have an authorId in the given list of id order by date 
     tweets = Tweet.query(Tweet.authorId.IN(listId)).order(-Tweet.dateTime).fetch(50)

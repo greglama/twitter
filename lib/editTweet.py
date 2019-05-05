@@ -8,7 +8,7 @@ import logging
 from twitterBaseHandler import TwitterBaseHandler
 
 from crud.user_CRUD import updateUser
-from crud.tweets_CRUD import getTweetById, updateTweet
+from crud.tweets_CRUD import getTweetById, updateTweet, deleteTweet
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -46,4 +46,13 @@ class EditTweet(TwitterBaseHandler):
             tweet_id = self.request.get('tweet_id')
 
             updateTweet(tweet_id, tweetContent)
+            self.redirect("/profile")
+        
+        #delete a tweet
+        if self.request.get('button') == 'delete':
+
+            tweetContent = self.request.get('tweet')
+            tweet_id = self.request.get('tweet_id')
+
+            deleteTweet(tweet_id)
             self.redirect("/profile")
