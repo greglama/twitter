@@ -12,23 +12,16 @@ The *app.yaml* descibes where is the starting point of the program :
 
 ```{yaml}
 -url: /.*
- script: lib.main.app
+ script: main.app
 ```
+To start the server open a terminal and place yourself in the repository.</br>
+Then run `dev_appserver.py app.yaml` (you will need google SDK to be able to run this).</br>
+You can download it here: https://cloud.google.com/appengine/docs/standard/python/download
 </br>
 
-The file *main.py* in the lib folder contains all the routing of the app.
+The file *main.py* contains all the routing of the app.
 
-*static* contains all the files that are neither code, nor html template (anything that won't change at all).</br>
+*static* contains all the files that are neither code, nor html template (anything that won't change at all, so just CSS here).</br>
 *lib* contains the code itself and the html templates
 - All the handlers for each endpoints are in lib
-- The folder crud contains the classes to access the data store, and models for the users and tweets
-
-### _TODO_
-
-- add a user's tweets in its timeline
-- allow a user to have a short description on its profile
-- allow a user to edit its tweets
-
-- refactor the searchEngine handler with its own crud class
-- refactor opperations linked to tweets in a tweet_CRUD class
-- turn the crud classes into static class ?
+- The folder crud contains the classes to access the data store, and the models for the users and tweets
