@@ -3,7 +3,7 @@ Twitter-like project with google app engine and python
 
 ## What is the project about ?
 
-This is an acadmic project consisting in re-creating a minimalistic version of Twitter. </br>
+This is an acadmic project consisting in a minimalistic version of Twitter. </br>
 It is currently in development.
 
 ## The repository
