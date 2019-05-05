@@ -20,7 +20,7 @@ def formatTextForSearch(text):
                                 .replace("\r", " ")
                                 .split(" "))
 
-# ------------------- Create and get tweets ----------------------
+# ------------------- Create, Get and search for tweets ----------------------
 
 def postTweet(userId, text):
     """create a tweet for a given user"""

@@ -31,16 +31,20 @@ class OtherProfile(TwitterBaseHandler):
         profileId = self.request.get('profileId') # id of profile to see
         profile = getUser(profileId)
 
+        # if the user is visiting its own profile through the search tool
+        if profileId == user_twitter_id:
+            self.redirect("/profile", True, True) #redirect him to his profile
+
         # get the profile and its tweets
         tweets = getAllTweetsOfUser(profileId) #tweets of the profile to see
 
-        follow_unfollow = self.FOLLOW
-
-        # if the profile is already followed
-        if isUserFollowed(profileId, user_twitter_id):
-            follow_unfollow = self.UNFOLLOW #set the option to unfollow
-
         
+        follow_unfollow = OtherProfile.FOLLOW
+
+        # if the visited profile is already followed
+        if isUserFollowed(profileId, user_twitter_id):
+            follow_unfollow = OtherProfile.UNFOLLOW #sugest to unfollow
+
         template_values = {
             "userName": profile.name,
             "userPseudo": profile.pseudo,
