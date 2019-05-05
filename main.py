@@ -1,14 +1,15 @@
 import webapp2
 import logging
-from login import Login
-from firstLogin import FirstLogin
-from profile import Profile
-from editProfile import EditProfile
-from postTweet import PostTweet
-from searchEngine import SearchEngine
-from otherProfile import OtherProfile
-from timeLine import TimeLine
-from editTweet import EditTweet
+
+from lib.login import Login
+from lib.firstLogin import FirstLogin
+from lib.profile import Profile
+from lib.editProfile import EditProfile
+from lib.postTweet import PostTweet
+from lib.searchEngine import SearchEngine
+from lib.otherProfile import OtherProfile
+from lib.timeLine import TimeLine
+from lib.editTweet import EditTweet
 
 TEMPLATE_FOLDER = "/template/"
 
