@@ -8,6 +8,7 @@ from postTweet import PostTweet
 from searchEngine import SearchEngine
 from otherProfile import OtherProfile
 from timeLine import TimeLine
+from editTweet import EditTweet
 
 TEMPLATE_FOLDER = "/template/"
 
@@ -17,6 +18,7 @@ EditProfile.set_template_to_render(TEMPLATE_FOLDER + 'editProfile.html')
 SearchEngine.set_template_to_render(TEMPLATE_FOLDER + 'searchResult.html')
 OtherProfile.set_template_to_render(TEMPLATE_FOLDER + 'otherProfile.html')
 TimeLine.set_template_to_render(TEMPLATE_FOLDER + 'timeLine.html')
+EditTweet.set_template_to_render(TEMPLATE_FOLDER + 'editTweet.html')
 
 app = webapp2.WSGIApplication([
     ('/', Login),
@@ -26,6 +28,6 @@ app = webapp2.WSGIApplication([
     ('/postTweet', PostTweet),
     ('/searchEngine', SearchEngine),
     ('/otherProfile', OtherProfile),
-    ('/timeLine', TimeLine)
+    ('/timeLine', TimeLine),
+    ('/editTweet', EditTweet)
 ], debug=True)
-

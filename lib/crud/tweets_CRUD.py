@@ -20,7 +20,7 @@ def formatTextForSearch(text):
                                 .replace("\r", " ")
                                 .split(" "))
 
-# ------------------- Create, Get and search for tweets ----------------------
+# ------------------- Create, Get, Update and search for tweets ----------------------
 
 def postTweet(userId, text):
     """create a tweet for a given user"""
@@ -37,6 +37,23 @@ def postTweet(userId, text):
         tweet.text = text
         tweet.wordSearch = formatTextForSearch(text)
         tweet.put()
+
+
+def getTweetById(idTweet):
+    """get a tweet from its id"""
+    tweet_key = ndb.Key("Tweet", idTweet)
+    tweet = tweet_key.get()
+
+    return tweet
+
+
+def updateTweet(idTweet, newText):
+    """update the text content of a tweet, given its id"""
+    tweet = getTweetById(idTweet)
+
+    tweet.text = newText
+    tweet.wordSearch = formatTextForSearch(newText)
+    tweet.put()
 
 
 def getAllTweetsOfUser(userId):
@@ -61,10 +78,10 @@ def getTimeLineForUser(userId):
     user = getUser(userId)
     result = []
 
-    #list of user's id that the current user follow
+    #list of user's id that the current user follows
     suscriptions_ids = list(user.suscriptions)
 
-    #run the query only if the user follow at least one person
+    #run the query only if the user follows at least one person
     if len(suscriptions_ids) > 0:
         result = get50lastTweetsOfUserIn(suscriptions_ids)
 

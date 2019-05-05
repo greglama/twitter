@@ -1,0 +1,32 @@
+{% extends "/template/base.html" %}
+
+{% block userName %}{{userName}}{% endblock %}
+{% block userPseudo %}{{userPseudo}}{% endblock %}
+
+{% block logout %}{{logout_url}}{% endblock %}
+
+{% block content %}
+<div class = "row">
+    <div class = "col-3"></div>
+    <form class = "box col-6" method="post" action="/editTweet">
+        <div class = "row">
+            <label class = "col-2">Edit tweet</label>
+            <textarea class = "tweet" 
+            type = "text"
+            rows = "7"
+            cols = "50"
+            name = "tweet"
+            maxlength = "280"
+            placeholder = "your description"
+            value="">{{tweet}}</textarea>
+        </div>
+        <input type="hidden" value="{{tweet_id}}" name="tweet_id"/>
+        <div class = "row">
+            <div class = "col-10"></div>
+            <input class = "col-2 menuValidation" type="submit" value="validate" name="button"/>
+        </div>
+    </form>
+
+    <div class = "col-3"></div>
+</div>
+{% endblock %}

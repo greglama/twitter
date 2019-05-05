@@ -48,7 +48,8 @@
             <div class = "box col-6">
                 <h4>{{userName}} @{{userPseudo}} has tweeted ({{tweet.dateTime.date()}})</h4>
                 <p class = "tweet">{{tweet.text}}</p>
-            </div>     
+                <a class = "menu" href = "/editTweet?tweetID={{tweet.key.id()}}">Edit</a>
+            </div>
             <div class = "col-3"></div>           
         </div>
         </br>
